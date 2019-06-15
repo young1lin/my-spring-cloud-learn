@@ -1,0 +1,18 @@
+server:
+  port: 7777
+###random.int value long int(10)  int[10,20]
+# java -jar xxxx.jar --spring.profiles.active=test
+com.young1lin.age: ${random.value}
+#spring:
+ # profiles:
+  #  active: test
+# eureka.client.register-with-eureka=false这里自己是注册中心，所以设置为false，发表不向注册中心注册自己
+# eureka.client.fetch-registry: false由于注册中心的指着就是维护服务实例，他并不需要去检索服务，所以也设置为false
+eureka:
+  client:
+    serviceUrl.defaultZone: http://localhost:1111/eureka/
+  instance:
+    hostname: localhost
+spring:
+  application:
+    name: hello-service
