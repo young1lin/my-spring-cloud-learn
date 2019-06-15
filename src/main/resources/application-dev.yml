@@ -1,4 +1,0 @@
-server:
-  port: 7900
-###random.int value long int(10)  int[10,20]
-com.young1lin.age: ${random.int}
