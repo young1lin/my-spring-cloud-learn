@@ -1,0 +1,7 @@
+server:
+  port: 7999
+###random.int value long int(10)  int[10,20]
+com.young1lin.age: ${random.int}
+management.security.enabled: false
+info.app.name: young1lin
+info.app.version: 1.0.3
