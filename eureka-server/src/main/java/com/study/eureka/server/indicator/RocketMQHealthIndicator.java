@@ -1,4 +1,4 @@
-package com.disdispace.hello.indicator;
+package com.study.eureka.server.indicator;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;

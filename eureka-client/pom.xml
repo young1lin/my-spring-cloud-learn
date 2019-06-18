@@ -36,6 +36,13 @@
             <artifactId>spring-cloud-starter-eureka-server</artifactId>
         </dependency>
 
+        <!-- 添加格式化Json依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.33</version>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

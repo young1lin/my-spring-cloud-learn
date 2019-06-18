@@ -1,4 +1,4 @@
-package com.disdispace.hello.controller;
+package com.study.eureka.server.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;

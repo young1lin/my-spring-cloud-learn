@@ -12,6 +12,7 @@
     <modules>
         <module>eureka-client</module>
         <module>eureka-server</module>
+        <module>ribbon</module>
 
     </modules>
 

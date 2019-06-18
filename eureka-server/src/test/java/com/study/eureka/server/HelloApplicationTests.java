@@ -1,6 +1,6 @@
-package com.disdispace.hello;
+package com.study.eureka.server;
 
-import com.disdispace.hello.controller.HelloController;
+import com.study.eureka.server.controller.HelloController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
