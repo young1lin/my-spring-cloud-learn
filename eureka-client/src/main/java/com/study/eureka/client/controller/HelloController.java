@@ -23,4 +23,11 @@ public class HelloController {
         logger.info("/hello,host:"+instance.getHost()+",service_id:"+instance.getServiceId());
         return "Hello World";
     }
+
+    @RequestMapping(value = "/hello",method = RequestMethod.GET)
+    public String hello(){
+        ServiceInstance instance = client.getLocalServiceInstance();
+        logger.info("/hello,host:"+instance.getHost()+",service_id:"+instance.getServiceId());
+        return "Hello World";
+    }
 }

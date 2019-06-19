@@ -1,5 +1,5 @@
 server:
-  port: 7777
+  port: 8080
 ###random.int value long int(10)  int[10,20]
 # java -jar xxxx.jar --spring.profiles.active=test
 com.young1lin.age: ${random.value}
