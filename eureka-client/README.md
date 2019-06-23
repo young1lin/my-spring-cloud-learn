@@ -1,5 +1,5 @@
 ### 服务提供者
-需要确认 eureka.client.register-with-eureka=true
+需要确认 `eureka.client.register-with-eureka=true`
 该值默认为 true,如果为false 则不会启动注册操作
 
 ### 关于服务续约
@@ -24,10 +24,10 @@ Zone。在进行服务调用的时候，有限访问同处一个 Zone 中的服�
 ---
 ### Region 和 Zone
 在 `DiscoveryClient` 类中发现很多被不建议使用的方法，其中方法都是由 `EndpointUtils` 类提供，其中 `getServiceUrlsMapFromConfig()`
-有Region 和 Zone 的定义。
+有 Region 和 Zone 的定义。
 #### Region
 可以通过`eureka.client.region`来定义
-+ 由此可以看出，一个微服务应用只可以属于一个region
++ 由此可以看出，一个微服务应用只可以属于一个 Region
 ```java
 public static String getRegion(EurekaClientConfig clientConfig){
     String region = clientConfig.getRegion();
@@ -52,7 +52,13 @@ public String[] getAvailabilityZones(String region) {
 ```
 当我们在微服务应用中使用 Ribbon 来实现服务调用时，对于 Zone 的设置可以再负载均衡实现区域亲和特性：Ribbon 的默认策略会优先访问同客户端处于一个 Zone
 中的服务端实例，没有就其他 Zone 找。结合 Zone 属性定义，可以有效设计出对区域性故障的容错集群。
-
----
-
+#### serviceUrls
+获取了 Reion 和 Zone 的信息之后，才开始真正加载 Eureka Server 的具体地址。它根据传入的参数按一定算法确定加载位于哪一个 Zone 配置的 serviceUrls。
+```java
+in myZoneOffset = getZoneOffset(instanceZone,preferSameZone,availZones);
+String zone = availZones[myZoneOffset];
+List<String> serviceUrls = clientConfig.getEurekaServerServiceUrls(zone);
+```
 ### 服务注册
+在服务治理框架中，通常都会构建一个注册中心，每个服务单元向注册中心登记自己提供的服务，将主机与端口号、版本号、通信协议等一些附加信息告知注册中心，
+注册中心按服务名分类组织服务清单。双层Map保存，Map<String,Map<String,Object>>,第一层 Map key 为服务名，第二层Map key 为具体服务的实例名。
