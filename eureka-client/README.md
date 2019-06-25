@@ -58,7 +58,68 @@ public String[] getAvailabilityZones(String region) {
 in myZoneOffset = getZoneOffset(instanceZone,preferSameZone,availZones);
 String zone = availZones[myZoneOffset];
 List<String> serviceUrls = clientConfig.getEurekaServerServiceUrls(zone);
+
+/**
+* 该方法是 InstanceInfoReplicator 执行的定时任务，
+*/
+public void run() {
+    boolean var6 = false;
+
+    ScheduledFuture next;
+    label53: {
+        try {
+            var6 = true;
+            this.discoveryClient.refreshInstanceInfo();
+            Long dirtyTimestamp = this.instanceInfo.isDirtyWithTime();
+            if (dirtyTimestamp != null) {
+                this.discoveryClient.register();
+                this.instanceInfo.unsetIsDirty(dirtyTimestamp);
+                var6 = false;
+            } else {
+                var6 = false;
+            }
+            break label53;
+        } catch (Throwable var7) {
+            logger.warn("There was a problem with the instance info replicator", var7);
+            var6 = false;
+        } finally {
+            if (var6) {
+                ScheduledFuture next = this.scheduler.schedule(this, (long)this.replicationIntervalSeconds, TimeUnit.SECONDS);
+                this.scheduledPeriodicRef.set(next);
+            }
+        }
+
+        next = this.scheduler.schedule(this, (long)this.replicationIntervalSeconds, TimeUnit.SECONDS);
+        this.scheduledPeriodicRef.set(next);
+        return;
+    }
+
+    next = this.scheduler.schedule(this, (long)this.replicationIntervalSeconds, TimeUnit.SECONDS);
+    this.scheduledPeriodicRef.set(next);
+}
+/**
+*  这一行，真正触发调用住的地方就在这里，以 `REST` 请求的范式进行的 .同时，在发起注册请求的时候，传入了一个 `com.netflix.appinfo.InstanceInfo`对象，该对象就是注册时
+*  客户端给服务端的服务的元数据
+*/
+boolean register() throws Throwable {
+        logger.info("DiscoveryClient_" + this.appPathIdentifier + ": registering service...");
+
+        EurekaHttpResponse httpResponse;
+        try {
+            httpResponse = this.eurekaTransport.registrationClient.register(this.instanceInfo);
+        } catch (Exception var3) {
+            logger.warn("{} - registration failed {}", new Object[]{"DiscoveryClient_" + this.appPathIdentifier, var3.getMessage(), var3});
+            throw var3;
+        }
+
+        if (logger.isInfoEnabled()) {
+            logger.info("{} - registration status: {}", "DiscoveryClient_" + this.appPathIdentifier, httpResponse.getStatusCode());
+        }
+
+        return httpResponse.getStatusCode() == 204;
+    }
 ```
+
 ### 服务注册
 在服务治理框架中，通常都会构建一个注册中心，每个服务单元向注册中心登记自己提供的服务，将主机与端口号、版本号、通信协议等一些附加信息告知注册中心，
 注册中心按服务名分类组织服务清单。双层Map保存，Map<String,Map<String,Object>>,第一层 Map key 为服务名，第二层Map key 为具体服务的实例名。
