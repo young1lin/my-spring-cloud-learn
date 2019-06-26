@@ -8,11 +8,23 @@ com.young1lin.age: ${random.value}
   #  active: test
 # eureka.client.register-with-eureka=false这里自己是注册中心，所以设置为false，发表不向注册中心注册自己
 # eureka.client.fetch-registry: false由于注册中心的指着就是维护服务实例，他并不需要去检索服务，所以也设置为false
+management:
+  context-path: /hello
 eureka:
   client:
+    healthcheck:
+      enabled: true
     serviceUrl.defaultZone: http://localhost:1111/eureka/
   instance:
     hostname: localhost
+    #这里默认会加 / 所以不用配置 /
+    status-page-url-path: ${management.context-path}${endpoints.info.path}
+    health-check-url-path: ${management.context-path}${endpoints.health.path}
 spring:
   application:
     name: hello-service
+endpoints:
+  info:
+    path: /appinfo
+  health:
+    path: /checkHealth
