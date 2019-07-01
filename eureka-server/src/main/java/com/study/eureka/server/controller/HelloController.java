@@ -27,7 +27,7 @@ public class HelloController {
 
     @GetMapping("/getJson")
     public List<String> getJsonHello(String json,Long id){
-        ArrayList<String> strings = new ArrayList<>();
+        ArrayList<String> strings = new ArrayList<String>();
         strings.add("111");
         strings.add("2222");
         strings.add("33333");
@@ -36,8 +36,8 @@ public class HelloController {
 
     @GetMapping("/getMap")
     public Map<String,Object> getMap(){
-        Map<String, Object> map = new HashMap<>();
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> map = new HashMap<String,Object>();
+        Map<String, Object> data = new HashMap<String,Object>();
         data.put("id",1);
         data.put("name","young");
         data.put("age",22L);

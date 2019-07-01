@@ -19,5 +19,12 @@ eureka:
     enable-self-preservation: false
     ### Default Value is false
     #prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+### 自定义数据
 com.young1lin.age: ${random.value}
 
