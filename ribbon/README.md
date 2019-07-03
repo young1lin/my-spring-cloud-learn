@@ -186,3 +186,34 @@ public class LoadBalancerInterceptor implements ClientHttpRequestInterceptor {
     }
 }
 ```
+### Ribbon的负载均衡实现之 更新服务实例
+```java
+ public synchronized void start(final UpdateAction updateAction) {
+        if (this.isActive.compareAndSet(false, true)) {
+            Runnable wrapperRunnable = new Runnable() {
+                public void run() {
+                    if (!PollingServerListUpdater.this.isActive.get()) {
+                        if (PollingServerListUpdater.this.scheduledFuture != null) {
+                            PollingServerListUpdater.this.scheduledFuture.cancel(true);
+                        }
+
+                    } else {
+                        try {
+                            updateAction.doUpdate();
+                            PollingServerListUpdater.this.lastUpdated = System.currentTimeMillis();
+                        } catch (Exception var2) {
+                            PollingServerListUpdater.logger.warn("Failed one update cycle", var2);
+                        }
+
+                    }
+                }
+            };
+            this.scheduledFuture = getRefreshExecutor().scheduleWithFixedDelay(wrapperRunnable, this.initialDelayMs, this.refreshIntervalMs, TimeUnit.MILLISECONDS);
+        } else {
+            logger.info("Already active, no-op");
+        }
+
+    }
+```
+`initialDelayMS` 和 `refreshIntervalMs` 的默认定义分别为 1000 和 30*1000，单位为毫秒。也就是说，更新服务实例在初始化之后延迟 1 秒后开
+始执行.
